@@ -1,7 +1,6 @@
-// import { useState } from "react";
-
 import {useState, useEffect} from "react";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 
 
 type Todo = {
@@ -37,7 +36,6 @@ function App() {
 
     const handleSave = () => {
         if (currentNote === "") return;
-
 
 
         const payload = {
@@ -84,7 +82,7 @@ function App() {
         setCurrentNote(todo.note);
         setEditId(todo.id);
         setEditIndex(index);
-        //setNoteTags(todo.tags);
+        setNoteTags(todo.tags);
         setTagInput(todo.tags.join(", "));
     };
 
@@ -114,7 +112,8 @@ function App() {
                     border: "2px solid #333",
                     padding: "20px",
                     borderRadius: "10px",
-                    backgroundColor: "#1e1e1e",
+                    backgroundColor: "#ffffff",
+                    color: "#000000",
                     width: "400px",
                 }}
             >
@@ -125,18 +124,34 @@ function App() {
                         style={{
                             borderRadius: "10px",
                             display: "flex",
-                            alignItems: "center",
+                            flexDirection: "column",
+                            gap: "8px",
                             border: "1px solid #ccc",
                             marginBottom: "10px",
                             padding: "10px",
-                            justifyContent: "space-between",
-                            backgroundColor: "#1e1e1e",
+                            backgroundColor: "#fdfdfd",
+                            color: "#000000",
                         }}
                     >
                         <div style={{marginRight: "10px", flex: 1}}>
                             <strong>{todo.title}</strong>
-                            <div>{todo.tags.join(", ")}</div>
-                            <div>{todo.note}</div>
+                            <div style={{display: "flex", gap: "5px", flexWrap: "wrap"}}>
+                                {todo.tags.map((tag, i) => (
+                                    <span
+                                        key={i}
+                                        style={{
+                                            backgroundColor: "#e0e0e0",
+                                            color: "#000",
+                                            padding: "4px 8px",
+                                            borderRadius: "15px",
+                                            fontSize: "12px",
+                                        }}
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <ReactMarkdown>{todo.note}</ReactMarkdown>
 
                         </div>
                         <div style={{display: "flex", gap: "10px"}}>
@@ -162,7 +177,9 @@ function App() {
                             padding: "8px",
                             width: "100%",
                             borderRadius: "5px",
-                            border: "1px solid #ccc",
+                            backgroundColor: "#f5f5f5",
+                            border: "1px solid #999",
+                            color: "#000000",
                         }}
                     />
                 </div>
@@ -190,7 +207,9 @@ function App() {
                             padding: "8px",
                             width: "100%",
                             borderRadius: "5px",
-                            border: "1px solid #ccc",
+                            backgroundColor: "#f5f5f5",
+                            border: "1px solid #999",
+                            color: "#000000",
                         }}
                     />
                 </div>
@@ -201,8 +220,8 @@ function App() {
                         padding: "10px 0",
                     }}
                 >
-                    <input
-                        placeholder="Enter new Note"
+                    <textarea
+                        placeholder="Enter Content"
                         value={currentNote}
                         onChange={(e) => setCurrentNote(e.target.value)}
                         style={{
@@ -210,7 +229,12 @@ function App() {
                             width: "100%",
                             height: "150px",
                             borderRadius: "5px",
-                            border: "1px solid #ccc",
+                            backgroundColor: "#f5f5f5",
+                            border: "1px solid #999",
+                            color: "#000000",
+                            resize: "none",
+                            textAlign: "left",
+                            verticalAlign: "top",
                         }}
                     />
                 </div>
