@@ -7,8 +7,8 @@ import axios from "axios";
 type Todo = {
     id: number;
     title: string;
-    description: string;
     note: string;
+    tags: string[];
 };
 
 
@@ -16,6 +16,7 @@ function App() {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [currentNote, setCurrentNote] = useState<string>("");
     const [noteTitle, setNoteTitle] = useState<string>("");
+    const [tagInput, setTagInput] = useState<string>("");
     const [noteTags, setNoteTags] = useState<string[]>([]);
     const [editIndex, setEditIndex] = useState<number | null>(null);
     const [editId, setEditId] = useState<number | null>(null);
@@ -38,10 +39,11 @@ function App() {
         if (currentNote === "") return;
 
 
+
         const payload = {
             title: noteTitle,
             note: currentNote,
-            tags: noteTags
+            tags: noteTags,
         };
 
 
@@ -59,8 +61,7 @@ function App() {
         }
 
 
-        setCurrentNote("");
-        setNoteTitle("");
+        clearForm();
     };
 
 
@@ -71,9 +72,7 @@ function App() {
                 const newTodos = todos.filter((_, i) => i !== index);
                 setTodos(newTodos);
                 if (editIndex === index) {
-                    setCurrentNote("");
-                    setEditIndex(null);
-                    setEditId(null);
+                    clearForm();
                 }
             })
             .catch(console.error);
@@ -85,6 +84,18 @@ function App() {
         setCurrentNote(todo.note);
         setEditId(todo.id);
         setEditIndex(index);
+        //setNoteTags(todo.tags);
+        setTagInput(todo.tags.join(", "));
+    };
+
+
+    const clearForm = () => {
+        setCurrentNote("");
+        setNoteTitle("");
+        setTagInput("");
+        setNoteTags([]);
+        setEditIndex(null);
+        setEditId(null);
     };
 
     return (
@@ -124,94 +135,98 @@ function App() {
                     >
                         <div style={{marginRight: "10px", flex: 1}}>
                             <strong>{todo.title}</strong>
+                            <div>{todo.tags.join(", ")}</div>
                             <div>{todo.note}</div>
-                        </div>
-                            <div style={{display: "flex", gap: "10px"}}>
-                                <button onClick={() => handleEdit(todo, index)}>Edit</button>
-                                <button onClick={() => handleDelete(todo.id, index)}>Delete</button>
-                            </div>
-                        </div>
-                        ))}
 
-
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                padding: "10px 0",
-                            }}
-                        >
-                            <input
-                                placeholder="Enter note title"
-                                value={noteTitle}
-                                onChange={(e) => setNoteTitle(e.target.value)}
-                                style={{
-                                    padding: "8px",
-                                    width: "100%",
-                                    borderRadius: "5px",
-                                    border: "1px solid #ccc",
-                                }}
-                            />
                         </div>
-                        <div
-    style={{
-        display: "flex",
-        justifyContent: "center",
-        padding: "10px 0",
-    }}
->
-    <input
-        placeholder="Enter tags (comma separated)"
-        value={noteTags.join(", ")}
-        onChange={(e) => {
-            const input = e.target.value;
-            const tags = input.split(",").map(tag => tag.trim()).filter(Boolean);
-            setNoteTags(tags);
-        }}
-        style={{
-            padding: "8px",
-            width: "100%",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-        }}
-    />
-</div>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                padding: "10px 0",
-                            }}
-                        >
-                            <input
-                                placeholder="Enter new Note"
-                                value={currentNote}
-                                onChange={(e) => setCurrentNote(e.target.value)}
-                                style={{
-                                    padding: "10px",
-                                    width: "100%",
-                                    height: "150px",
-                                    borderRadius: "5px",
-                                    border: "1px solid #ccc",
-                                }}
-                            />
-                        </div>
-                        <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
-                            <button onClick={handleSave}>Save</button>
-                            <button
-                                onClick={() => {
-                                    setNoteTitle("");
-                                    setCurrentNote("");
-                                    setEditIndex(null);
-                                    setEditId(null);
-                                }}
-                            >
-                                Cancel
-                            </button>
+                        <div style={{display: "flex", gap: "10px"}}>
+                            <button onClick={() => handleEdit(todo, index)}>Edit</button>
+                            <button onClick={() => handleDelete(todo.id, index)}>Delete</button>
                         </div>
                     </div>
-                    </div>
-                    );
-                }
+                ))}
 
-                export default App;
+
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "10px 0",
+                    }}
+                >
+                    <input
+                        placeholder="Enter note title"
+                        value={noteTitle}
+                        onChange={(e) => setNoteTitle(e.target.value)}
+                        style={{
+                            padding: "8px",
+                            width: "100%",
+                            borderRadius: "5px",
+                            border: "1px solid #ccc",
+                        }}
+                    />
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "10px 0",
+                    }}
+                >
+                    <input
+                        placeholder="Enter tags (comma separated)"
+                        value={tagInput}
+                        onChange={(e) => {
+                            const input = e.target.value;
+                            setTagInput(input);
+
+                            const tags = input
+                                .split(",")
+                                .map((tag) => tag.trim())
+                                .filter((tag) => tag.length > 0);
+                            setNoteTags(tags);
+                        }}
+                        style={{
+                            padding: "8px",
+                            width: "100%",
+                            borderRadius: "5px",
+                            border: "1px solid #ccc",
+                        }}
+                    />
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "10px 0",
+                    }}
+                >
+                    <input
+                        placeholder="Enter new Note"
+                        value={currentNote}
+                        onChange={(e) => setCurrentNote(e.target.value)}
+                        style={{
+                            padding: "10px",
+                            width: "100%",
+                            height: "150px",
+                            borderRadius: "5px",
+                            border: "1px solid #ccc",
+                        }}
+                    />
+                </div>
+                <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
+                    <button onClick={handleSave}>Save</button>
+                    <button
+                        onClick={() => {
+                            clearForm();
+                        }}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default App;

@@ -38,6 +38,7 @@ public class TodoService {
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         existingTodo.setTitle(todo.getTitle());
         existingTodo.setNote(todo.getNote());
+        existingTodo.setTags(todo.getTags());
         return repository.save(existingTodo);
     }
 
