@@ -15,6 +15,8 @@ type Todo = {
 function App() {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [currentNote, setCurrentNote] = useState<string>("");
+    const [noteTitle, setNoteTitle] = useState<string>("");
+    const [noteTags, setNoteTags] = useState<string[]>([]);
     const [editIndex, setEditIndex] = useState<number | null>(null);
     const [editId, setEditId] = useState<number | null>(null);
 
@@ -37,9 +39,9 @@ function App() {
 
 
         const payload = {
-            title: currentNote,
-            description: "",
+            title: noteTitle,
             note: currentNote,
+            tags: noteTags
         };
 
 
@@ -58,6 +60,7 @@ function App() {
 
 
         setCurrentNote("");
+        setNoteTitle("");
     };
 
 
@@ -78,6 +81,7 @@ function App() {
 
 
     const handleEdit = (todo: Todo, index: number) => {
+        setNoteTitle(todo.title);
         setCurrentNote(todo.note);
         setEditId(todo.id);
         setEditIndex(index);
@@ -118,49 +122,96 @@ function App() {
                             backgroundColor: "#1e1e1e",
                         }}
                     >
-                        <div style={{marginRight: "10px", flex: 1}}>{todo.note}</div>
-                        <div style={{display: "flex", gap: "10px"}}>
-                            <button onClick={() => handleEdit(todo, index)}>Edit</button>
-                            <button onClick={() => handleDelete(todo.id, index)}>Delete</button>
+                        <div style={{marginRight: "10px", flex: 1}}>
+                            <strong>{todo.title}</strong>
+                            <div>{todo.note}</div>
+                        </div>
+                            <div style={{display: "flex", gap: "10px"}}>
+                                <button onClick={() => handleEdit(todo, index)}>Edit</button>
+                                <button onClick={() => handleDelete(todo.id, index)}>Delete</button>
+                            </div>
+                        </div>
+                        ))}
+
+
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                padding: "10px 0",
+                            }}
+                        >
+                            <input
+                                placeholder="Enter note title"
+                                value={noteTitle}
+                                onChange={(e) => setNoteTitle(e.target.value)}
+                                style={{
+                                    padding: "8px",
+                                    width: "100%",
+                                    borderRadius: "5px",
+                                    border: "1px solid #ccc",
+                                }}
+                            />
+                        </div>
+                        <div
+    style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "10px 0",
+    }}
+>
+    <input
+        placeholder="Enter tags (comma separated)"
+        value={noteTags.join(", ")}
+        onChange={(e) => {
+            const input = e.target.value;
+            const tags = input.split(",").map(tag => tag.trim()).filter(Boolean);
+            setNoteTags(tags);
+        }}
+        style={{
+            padding: "8px",
+            width: "100%",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+        }}
+    />
+</div>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                padding: "10px 0",
+                            }}
+                        >
+                            <input
+                                placeholder="Enter new Note"
+                                value={currentNote}
+                                onChange={(e) => setCurrentNote(e.target.value)}
+                                style={{
+                                    padding: "10px",
+                                    width: "100%",
+                                    height: "150px",
+                                    borderRadius: "5px",
+                                    border: "1px solid #ccc",
+                                }}
+                            />
+                        </div>
+                        <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
+                            <button onClick={handleSave}>Save</button>
+                            <button
+                                onClick={() => {
+                                    setNoteTitle("");
+                                    setCurrentNote("");
+                                    setEditIndex(null);
+                                    setEditId(null);
+                                }}
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </div>
-                ))}
+                    </div>
+                    );
+                }
 
-
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        padding: "10px 0",
-                    }}
-                >
-                    <input
-                        placeholder="Enter new Note"
-                        value={currentNote}
-                        onChange={(e) => setCurrentNote(e.target.value)}
-                        style={{
-                            padding: "8px",
-                            width: "100%",
-                            borderRadius: "5px",
-                            border: "1px solid #ccc",
-                        }}
-                    />
-                </div>
-                <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
-                    <button onClick={handleSave}>Save</button>
-                    <button
-                        onClick={() => {
-                            setCurrentNote("");
-                            setEditIndex(null);
-                            setEditId(null);
-                        }}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default App;
+                export default App;
