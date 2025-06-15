@@ -1,5 +1,6 @@
 package com.todobasicsBackend.service;
 
+import com.todobasicsBackend.exception.TodoNotFoundException;
 import com.todobasicsBackend.exception.ValidationFailedException;
 import com.todobasicsBackend.model.Todo;
 import com.todobasicsBackend.repository.TodoRepository;
@@ -35,7 +36,7 @@ public class TodoService {
 
     public Todo updateTodo(Integer id, Todo todo) {
         Todo existingTodo = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
+                .orElseThrow(() -> new TodoNotFoundException("Todo not found with id: " + id));
         existingTodo.setTitle(todo.getTitle());
         existingTodo.setNote(todo.getNote());
         existingTodo.setTags(todo.getTags());
@@ -44,7 +45,7 @@ public class TodoService {
 
     public void deleteTodo(Integer id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Todo not found with id: " + id);
+            throw new TodoNotFoundException("Todo not found with id: " + id);
         }
         repository.deleteById(id);
     }
