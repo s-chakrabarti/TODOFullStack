@@ -48,3 +48,6 @@ export default tseslint.config({
   },
 })
 ```
+## TARGET SCOPE 
+
+![img.png](img.png)
