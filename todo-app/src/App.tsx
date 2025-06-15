@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
 
 
@@ -13,11 +13,10 @@ type Todo = {
 
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [currentNote, setCurrentNote] = useState<string>("");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [editId, setEditId] = useState<number | null>(null);
-
+    const [todos, setTodos] = useState<Todo[]>([]);
+    const [currentNote, setCurrentNote] = useState<string>("");
+    const [editIndex, setEditIndex] = useState<number | null>(null);
+    const [editId, setEditId] = useState<number | null>(null);
 
 
     useEffect(() => {
@@ -28,7 +27,7 @@ function App() {
     const fetchTodos = () => {
         axios
             .get("http://localhost:8080/todoBackend/getAllTodos/")
-            .then((response) => setTodos(response.status=== 200 ? response.data : []))
+            .then((response) => setTodos(response.status === 200 ? response.data : []))
             .catch((error) => console.error("Error fetching todos:", error));
     };
 
@@ -42,7 +41,6 @@ function App() {
             description: "",
             note: currentNote,
         };
-
 
 
         if (editId !== null) {
@@ -79,7 +77,7 @@ function App() {
     };
 
 
-    const handleEdit = (todo: Todo,index:number) => {
+    const handleEdit = (todo: Todo, index: number) => {
         setCurrentNote(todo.note);
         setEditId(todo.id);
         setEditIndex(index);
@@ -105,7 +103,7 @@ function App() {
                     width: "400px",
                 }}
             >
-                <h2 style={{ textAlign: "center" }}>TODO APP</h2>
+                <h2 style={{textAlign: "center"}}>TODO APP</h2>
                 {todos.map((todo, index) => (
                     <div
                         key={todo.id}
@@ -120,9 +118,9 @@ function App() {
                             backgroundColor: "#1e1e1e",
                         }}
                     >
-                        <div style={{ marginRight: "10px", flex: 1 }}>{todo.note}</div>
-                        <div style={{ display: "flex", gap: "10px" }}>
-                            <button onClick={() => handleEdit(todo,index)}>Edit</button>
+                        <div style={{marginRight: "10px", flex: 1}}>{todo.note}</div>
+                        <div style={{display: "flex", gap: "10px"}}>
+                            <button onClick={() => handleEdit(todo, index)}>Edit</button>
                             <button onClick={() => handleDelete(todo.id, index)}>Delete</button>
                         </div>
                     </div>
@@ -148,7 +146,7 @@ function App() {
                         }}
                     />
                 </div>
-                <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+                <div style={{display: "flex", gap: "10px", justifyContent: "center"}}>
                     <button onClick={handleSave}>Save</button>
                     <button
                         onClick={() => {
